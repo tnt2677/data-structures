@@ -23,7 +23,7 @@ template<typename T>
 class tree{
    private:
     node<T>* root;
-    unsigned int Size;
+    std::size_t Size;
    public:
     tree():root(NULL),Size(0){}
     virtual ~tree();//to make sure if a derived class is present it's destructor is called first
@@ -32,8 +32,9 @@ class tree{
     void insert(const T);
     void print(void)const;
     bool find(const T)const;
-    int height()const;
-    unsigned int size()const{return Size;}
+    unsigned int height()const;
+    std::size_t size()const{return Size;}
+    bool empty(void)const{return (int)Size==0;};
 };
 
 template<typename T>
@@ -51,7 +52,7 @@ node<T>* insert_helper(node<T>*,T);
 template<typename T>
 bool find_helper(node<T>*,const T);
 template<typename T>
-int height_helper(node<T>*);
+unsigned int height_helper(node<T>*);
 template<typename T>
 bool is_leaf(const node<T>*);
 
@@ -81,7 +82,7 @@ void delete_tree(node<T>* root){
 }
 
 template<typename T>
-int tree<T>::height(void)const{
+unsigned int tree<T>::height(void)const{
     return height_helper(this->root);
 }
 
@@ -179,7 +180,7 @@ bool find_helper(node<T>* root,const T key){
 }
 
 template<typename T>
-int height_helper(node<T>* root){
+unsigned int height_helper(node<T>* root){
     if(!root)return 0;
     return std::max(height_helper(root->left),height_helper(root->right))+1;
 }
