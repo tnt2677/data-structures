@@ -12,20 +12,44 @@ struct node{
     //default & parametrized constructor
     node(int data=0,bool color=red):data(data),left(NULL),right(NULL),color(color){}
 };
+void print_helper(const node *);
+bool is_red(node*);
+node* rotate_left(node*);
+node* rotate_right(node*);
+node* flip_color(node*);
+node* insert_helper(node*,int);
+bool find_helper(node*,const int);
+int height_helper(node*);
+
 class tree{
    private:
     node* root;
     int size;
    public:
     tree():root(NULL),size(0){}
-    friend node* insert(int);
-    friend void print(node*);
+    void insert(const int);
+    void print(void)const;
+    bool find(const int)const;
+    int height()const;
 };
-void print(node *root){
+int tree::height(void)const{
+    return height_helper(this->root);
+}
+bool tree::find(const int key)const{
+    return find_helper(this->root,key);
+}
+void tree::insert(const int key){
+    this->root=insert_helper(this->root,key);
+    if(is_red(this->root))this->root->color=black;
+}
+void tree::print(void)const{
+    print_helper(root);
+}
+void print_helper(const node *root){
     if(!root)return;
-    print(root->left);
+    print_helper(root->left);
     cout<<root->data<<" ";
-    print(root->right);
+    print_helper(root->right);
 }
 bool is_red(node* curr){
     //null links are black
@@ -62,11 +86,11 @@ node* flip_color(node* curr){
     curr->color=red;
     return curr;
 }
-node* insert(node* root,int key){
+node* insert_helper(node* root,int key){
     if(!root)return new node(key,red);
     
-    if((root->data)>=key)root->left=insert(root->left,key);
-    else root->right=insert(root->right,key);
+    if((root->data)>=key)root->left=insert_helper(root->left,key);
+    else root->right=insert_helper(root->right,key);
     
     //cases for rb insertion
     if(is_red(root->right)&&!is_red(root->left))root=rotate_left(root);
@@ -74,22 +98,20 @@ node* insert(node* root,int key){
     if(is_red(root->left)&&is_red(root->right))root=flip_color(root);
     return root;
 }
-node* find(node* root,int key){
+bool find_helper(node* root,const int key){
     node* curr=root;
     while(curr){
-        if(curr->data==key)return curr;
+        if(curr->data==key)return true;
         if(curr->data > key)curr=curr->left;
         else curr=curr->right;
     }
-    return NULL;
+    return false;
 }
-int height(node* root){
+int height_helper(node* root){
     if(!root)return 0;
-    return max(height(root->left),height(root->right))+1;
+    return max(height_helper(root->left),height_helper(root->right))+1;
 }
 int main(){
-    node* root=NULL;
-    root=new node(50,black);
-    for(int i=0;i<10;++i){root=insert(root,i);if(is_red(root))root->color=black;cout<<i<<endl;}
+    
     return 0;
 }
