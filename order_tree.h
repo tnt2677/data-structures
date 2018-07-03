@@ -1,3 +1,4 @@
+//class order tree
 #include <iostream>
 #include<assert.h>
 
@@ -14,7 +15,6 @@ struct node{
     node* right;
     int sz;//number of values smaller than current node
     bool color;//color of parent link
-
     //default & parametrized constructor
     node(T data = 0,bool color = red):data(data),left(NULL),right(NULL),color(color),sz(1){}
     ~node(){}
@@ -32,14 +32,10 @@ class order_tree{
     ///function declaration:
     //insertion:-
     void insert(const T);
-    //printing:-
-    void print(void)const;
     //find:-
     bool find(const T)const;
     //returns order of element in tree:-
     int get_order(const T)const;
-    //height:-
-    unsigned int height()const;
     //size:-
     std::size_t size()const{return Size;}
     //isEmpty:-
@@ -53,8 +49,6 @@ T _get_kth(const node<T> *,int);
 template<typename T>
 int get_size(const node<T> *);
 template<typename T>
-void print_helper(const node<T> *);
-template<typename T>
 bool is_red(node<T>*);
 template<typename T>
 node<T>* rotate_left(node<T>*);
@@ -65,9 +59,7 @@ node<T>* flip_color(node<T>*);
 template<typename T>
 node<T>* insert_helper(node<T>*,T);
 template<typename T>
-unsigned int height_helper(node<T>*);
-template<typename T>
-void set_height(node<T>* &curr);
+void set_size(node<T>* &curr);
 
 //*********************************************************************************************************************************************//
 //destructor for the tree and helper function:-
@@ -117,19 +109,7 @@ T _get_kth(const node<T>* root,int k){
     if(n > k)return _get_kth(root->left,k);
     return _get_kth(root->right,k-n-1);
 }
-//*********************************************************************************************************************************************//
-//get height and wrapper function:-
 
-template<typename T>
-unsigned int order_tree<T>::height(void)const{
-    return height_helper(this->root);
-}
-
-template<typename T>
-unsigned int height_helper(node<T>* root){
-    if(!root)return 0;
-    return std::max(height_helper(root->left),height_helper(root->right)) + 1;
-}
 //*********************************************************************************************************************************************//
 //find function:-
 
@@ -163,10 +143,10 @@ int order_tree<T>::get_order(const T key)const{
     return -1;
 }
 //*********************************************************************************************************************************************//
-//height updation utility:-
+//size updation utility:-
 
 template<typename T>
-void set_height(node<T>* &curr){
+void set_size(node<T>* &curr){
     if(!curr)return;
     curr->sz = 1 + get_size(curr->right) + get_size(curr->left);
 }
@@ -195,9 +175,9 @@ node<T>* rotate_left(node<T>* curr){
     curr->color = red;
     
     //now update size
-    set_height(x->left);
-    set_height(x->right);
-    set_height(x);
+    set_size(x->left);
+    set_size(x->right);
+    set_size(x);
     
     return x;
 }
@@ -213,9 +193,9 @@ node<T>* rotate_right(node<T>* curr){
     curr->color = red;
     
     //now update size
-    set_height(x->left);
-    set_height(x->right);
-    set_height(x);
+    set_size(x->left);
+    set_size(x->right);
+    set_size(x);
     
     return x;
 }
@@ -258,26 +238,10 @@ node<T>* insert_helper(node<T>* root,T key){
     if(is_red(root->left) && is_red(root->right))root = flip_color(root);
     
     //update size of curr node
-    set_height(root);
+    set_size(root);
     
     return root;
 }
-//*********************************************************************************************************************************************//
-//print function and supporting utilities:-
-
-template<typename T>
-void order_tree<T>::print(void)const{
-    print_helper(root);
-}
-
-template<typename T>
-void print_helper(const node<T> *root){
-    if(!root)return;
-    print_helper(root->left);
-    std::cout<<root->sz<<" ";
-    print_helper(root->right);
-}
-
 //*********************************************************************************************************************************************//
 
 #endif // ORDER_TREE_H
