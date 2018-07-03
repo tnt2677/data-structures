@@ -9,13 +9,15 @@ _Contains implementation of frequently used data structures :-_
         * unsigned int height(void)
         * void print(void)
         * bool find(key)
+        * bool empty(void)
    
    ### 2.Order-Statistics Tree( order_tree.h ):
-   _the given utilities work in _O_( log<sub>2</sub> n ) and use "0" based indexing_
+   _the given utilities work in _O_( log<sub>2</sub> n ) and use "0" based indexing-_
    
         * data get_kth(K) : returns kth order-statitics if valid, else largest element 
         * int get_order(key) : returns order of the element if present, else returns -1
         * void insert(key)
         * size_t size(void)
         * bool find(key)
+        * bool empty(void)
    
